@@ -20,14 +20,14 @@ export const ContactCard = props => {
 			console.error(error);
 		}
 	}
-	return (
 
-			<div className="card col-11 mx-4">
+	return (
+			<div className="card col-11 mb-1">
 						<div className="d-flex flex-row-reverse p-2"> 
 							<Link to={`/edit-contact/${props.id}`}>
 								<i className="fa-solid fa-pencil"></i></Link>
 							<span className="me-4" >
-								<i className="fa-solid fa-trash"
+								<i className="fa-solid fa-trash text-danger opacity-75 hover-opacity-100"
 								onClick={handlerDelete}></i></span>
 						</div>
 					<div className="card-body">

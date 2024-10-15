@@ -48,6 +48,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+
 			getContact: async (contactId) => {
 				const actions = getActions()
 					try {
@@ -85,11 +86,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				try {
 					//Obtener el contacto actual antes de editarlo
 					const response = await fetch(`${store.apiUrl}/agendas/${store.agendaSlug}/contacts`);
-					const existingContact = await response.json();
 					if (!response.ok) {
 						throw new Error("Error obtainig contact to edit");
 					}
-
+					const existingContact = await response.json();
+					
 					//Fusiono los campo actualizados con el contacto existente
 					const editedContact = {...existingContact, ...updatedFields};
 
@@ -101,16 +102,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 					body: JSON.stringify(editedContact)
 				});
-					const data = await editResponse.json()
-					if(!editResponse.ok){
-						throw new Error("Error while editing contact");
-					} 
-					console.log("Contact succesfully edited", data);
+				if(!editResponse.ok){
+					throw new Error("Error while editing contact");
+				} 
+				const data = await editResponse.json()
+				console.log("Contact succesfully edited", data);
+
+				// Actualizar el estado global (store.contacts) con el contacto editado
+				const updatedContacts = store.contacts.map(contact => 
+					contact.id === contactId ? editedContact : contact
+				);
+		
+				setStore({
+					contacts: updatedContacts
+				});
+
+				return data; // Devuelve el contacto actualizado
 
 				} catch (error) {
 					console.log("Error while editing contact", error);
 				}
 			},
+
 
 			deleteContact: async(contactId) => {
 				const store = getStore()

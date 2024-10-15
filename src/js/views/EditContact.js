@@ -7,7 +7,7 @@ export const EditContact = () => {
 	const params = useParams()
 	const contactId = params.contactId
 	const [contact, setContact] = useState(null);
-	const { actions } = useContext(Context)
+	const { store, actions } = useContext(Context)
 	const navigate = useNavigate()
 	console.log(params);
 
@@ -33,10 +33,14 @@ export const EditContact = () => {
 		try {
 			e.preventDefault();
 			if (contact) {
+				// Llamamos a la acción de editar contacto
 				const response = await actions.editContact(contactId, contact);
-				alert("User edited succesfully", response)
-				navigate("/")
-
+				// Asegúrate de que se actualice correctamente el estado
+				if (response) {
+					setContact(response);  // Actualiza el estado local con los datos editados
+					alert("User edited successfully");
+					navigate("/"); // Navega de vuelta a la lista de contactos
+				}
 			}
 
 		} catch (error) {
@@ -44,7 +48,7 @@ export const EditContact = () => {
 		}
 	};
 	if (!contact) {
-		return <div>Loading...</div>;
+		return <div>Are ready to add your first Contact?...</div>;
 	}
 	return (
 		<div className="p-3 mt-5">

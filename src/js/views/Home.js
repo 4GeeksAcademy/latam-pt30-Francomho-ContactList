@@ -6,11 +6,20 @@ import { ContactCard } from "../component/ContactCard";
 export const Home = () => {
     const {store,actions} = useContext(Context)
 
+    // Solo se dispara una vez al montar el componente para crear la agenda y cargar los contactos
     useEffect(()=> {
+        // Crear la agenda y cargar los contactos
         actions.createAgenda()
+        actions.getContacts();
     },[])
+    
+     // Si quieres disparar alguna acción cada vez que 'store.contacts' cambie, puedes hacer otro useEffect
+     useEffect(() => {
+        console.log("Los contactos han cambiado:", store.contacts);
+    }, [store.contacts]); // Esto se dispara cada vez que 'store.contacts' cambie
+
     return(
-	<div className="d-flex flex-column bg-black text-dark mt-5 ">
+	<div className="d-flex flex-column bg-black text-dark ms-4">
         {store.contacts && store.contacts.length > 0 ? store.contacts.map(contact => {
             return (
               <ContactCard
